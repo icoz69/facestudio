@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="ChartLlama: A Multimodal LLM for Chart Understanding and Generation">
+  <meta name="keywords" content="ChartLlama">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> ChartLlama: A Multimodal LLM for Chart Understanding and Generation</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/chartllama.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+
+<!-- 
+[**Yucheng Han**$^{\ast}$](http://tingxueronghua.github.io), [**Chi Zhang**$^{\ast\dag}$](https://icoz69.github.io/), [Xin Chen](https://chenxin.tech/), [Xu Yang](https://cse.seu.edu.cn/2021/1126/c23024a392593/page.htm), [Zhibin Wang](https://openreview.net/profile?id=~Billzb_Wang1)
+<br>
+[Gang Yu](https://www.skicyyu.org/), [Bin Fu](https://openreview.net/profile?id=~BIN_FU2), [Hanwang Zhang](https://personal.ntu.edu.sg/hanwangzhang/) -->
+
+<body>
+  <!-- Yucheng Han, Chi Zhang, Xin Chen, Xu Yang, Billzb Wang, Gang Yu, BIN FU, Hanwang Zhang  -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">ChartLlama: A Multimodal LLM for Chart Understanding and Generation
+            </h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="http://tingxueronghua.github.io">Yucheng Han*</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://icoz69.github.io/">Chi Zhang*&#10022</a><sup>2</sup>,</span>
+              <span class="author-block">
+                <a href="https://chenxin.tech/">Xin Chen</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://cse.seu.edu.cn/2021/1126/c23024a392593/page.htm">Xu Yang</a><sup>3</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://openreview.net/profile?id=~Billzb_Wang1">Zhibin Wang</a><sup>2</sup>,
+              </span>
+              <br>
+              <span class="author-block">
+                <a href="https://www.skicyyu.org/">Gang Yu</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://openreview.net/profile?id=~BIN_FU2">BIN FU</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://personal.ntu.edu.sg/hanwangzhang/">Hanwang Zhang</a><sup>1</sup>
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Nanyang Technological University</span>
+              <span class="author-block"><sup>2</sup>Tencent</span>
+              <span class="author-block"><sup>3</sup>Southeast University</span>
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup></sup>(* Equal contributions, &#10022 Corresponding Author)</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/pdf/2311.16483.pdf"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2311.16483"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <a href="https://github.com/tingxueronghua/ChartLlama-code"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <!-- Dataset Link. -->
+                <span class="link-block">
+                  <a href="https://huggingface.co/datasets/listen2you002/ChartLlama-Dataset"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="far fa-images"></i>
+                    </span>
+                    <span>Data</span>
+                  </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Teaser. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <div class="content has-text-justified">
+            <div class="center-image">
+              <figure>
+                <img src="./static/teaser_visualization_final_v3.png" class="interpolation-image"
+                  alt="Interpolate start reference image." />
+                <figcaption>
+                  <strong>Capability demonstration of ChartLlama.</strong> An instruction-tuning dataset is created
+                  based on our proposed data generation
+                  pipeline. We train ChartLlama on this dataset and achieve the abilities shown in the figure.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Teaser. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <div class="content has-text-justified">
+            <div class="center-image">
+              <figure>
+                <img src="./static/pipline.png" class="interpolation-image"
+                  alt="Interpolate start reference image." />
+                <figcaption>
+                  <strong>Pipeline of our data generation method.</strong> The innovative data generation process we proposed consists of three important steps relying on GPT-4. The dataset generated using this process exhibits significant advantages compared to previous datasets in terms of data
+                  diversity, quality, the number of chart types, and the variety of tasks. ChartLlama, which is trained on this dataset, has the ability to perform
+                  various tasks based on the design of the instruction-tuning data.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Teaser. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <div class="content has-text-justified">
+            <div class="center-image">
+              <figure>
+                <img src="./static/statistics.png" class="interpolation-image"
+                  alt="Interpolate start reference image." />
+                <figcaption>
+                  <strong>Distributions of different types of data in our dataset.</strong> The top and bottom pie charts show the distribution of task types
+                  and chart types, respectively. <strong>The illustration is generated by our
+                  proposed ChartLlama.</strong>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Multi-modal large language models have demonstrated impressive performances on most vision-language tasks.
+              However, the model generally lacks the understanding capabilities for specific domain data, particularly
+              when it comes to interpreting chart figures. This is mainly due to the lack of relevant multi-modal
+              instruction tuning datasets.
+              In this article, we create a high-quality instruction-tuning dataset leveraging GPT-4. We develop a
+              multi-step data generation process in which different steps are responsible for generating tabular data,
+              creating chart figures, and designing instruction tuning data separately.
+              Our method's flexibility enables us to generate diverse, high-quality instruction-tuning data consistently
+              and efficiently while maintaining a low resource expenditure. Additionally, it allows us to incorporate a
+              wider variety of chart and task types not yet featured in existing datasets.
+              Next, we introduce ChartLlama, a multi-modal large language model that we've trained using our created
+              dataset. ChartLlama outperforms all prior methods in ChartQA, Chart-to-text, and Chart-extraction
+              evaluation benchmarks. Additionally, ChartLlama significantly improves upon the baseline in our specially
+              compiled chart dataset, which includes new chart and task types. The results of ChartLlama confirm the
+              value and huge potential of our proposed data generation method in enhancing chart comprehension.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ Abstract. -->
+    </div>
+  </section>
+  
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Teaser. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <div class="content has-text-justified">
+            <div class="center-image">
+              <figure>
+                <img src="./static/qualitative_visualization_01.png" class="interpolation-image"
+                  alt="Interpolate start reference image." />
+                <figcaption>
+                  <strong>Visualization on the ChartQA task.</strong> Here are two
+                  examples of the predictions of Unichart, LLaVA-1.5, and ChartL-
+                  lama. Our proposed ChartLlama could follow the long instructions
+                  and do calculations to get the correct results.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Teaser. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <div class="content has-text-justified">
+            <div class="center-image">
+              <figure>
+                <img src="./static/qualitative_visualization_02.png" class="interpolation-image"
+                  alt="Interpolate start reference image." />
+                <figcaption>
+                  <strong>Visualization of Chart-extraction.</strong> We find that ChartLlama is especially good at long
+                  text processing. While the previous
+                  SOTA, Unichart, will generate meaningless redundant words when the output is too long.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Teaser. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <div class="content has-text-justified">
+            <div class="center-image">
+              <figure>
+                <img src="./static/qualitative_visualization_03.png" class="interpolation-image"
+                  alt="Interpolate start reference image." />
+                <figcaption>
+                  <strong>Visualization of Chart-to-text.</strong> We select one image from the Pew Dataset and show the
+                  results of Unichart, LLaVA-1.5, and
+                  ChartLlama. We find that Unichart easily falls into repeated words again and LLaVA-1.5 suffers from
+                  hallucination.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Teaser. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <div class="content has-text-justified">
+            <div class="center-image">
+              <figure>
+                <img src="./static/qualitative_visualization_04.png" class="interpolation-image"
+                  alt="Interpolate start reference image." />
+                <figcaption>
+                  <strong>Qualitative comparison for Chart-to-chart and Chart editing tasks.</strong> We present the
+                  output results of LLaVA-1.5 and ChartL-
+                  LaMA for the same chart given different instructions. The instruction in the first row requires the
+                  model to output the original chart,
+                  performing the chart-to-chart task. The instruction in the second row requires the model to output a
+                  horizontal bar chart, performing the
+                  chart editing task.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Teaser. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <div class="content has-text-justified">
+            <div class="center-image">
+              <figure>
+                <img src="./static/qualitative_visualization_05.png" class="interpolation-image"
+                  alt="Interpolate start reference image." />
+                <figcaption>
+                  <strong>Qualitative comparison for Text-to-chart task. </strong> We have presented the generated
+                  images by ChartLLaMA and LLaVA-1.5
+                  given the tabular data and the specified requirements.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Teaser. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <div class="content has-text-justified">
+            <div class="center-image">
+              <figure>
+                <img src="./static/traditional_task.png" class="interpolation-image" alt="Interpolate start reference image." />
+                <figcaption>
+                  <strong>We achieve SOTA on traditional tasks.</strong> Traditional tasks include ChartQA, Chart-to-text and Chart extraction.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Teaser. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <div class="content has-text-justified">
+            <div class="center-image">
+              <figure>
+                <img src="./static/new_task.png" class="interpolation-image" alt="Interpolate start reference image." />
+                <figcaption>
+                  <strong>We achieve SOTA on new tasks.</strong> We propose several new tasks based on our proposed data generation mechanism. 
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>
+@misc{han2023chartllama,
+  title={ChartLlama: A Multimodal LLM for Chart Understanding and Generation}, 
+  author={Yucheng Han and Chi Zhang and Xin Chen and Xu Yang and Zhibin Wang and Gang Yu and Bin Fu and Hanwang Zhang},
+  year={2023},
+  eprint={2311.16483},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV}
+}
+      </code></pre>
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <a class="icon-link" href="https://arxiv.org/pdf/2311.16483.pdf">
+          <i class="fas fa-file-pdf"></i>
+        </a>
+        <a class="icon-link" href="https://github.com/tingxueronghua/ChartLlama-code" class="external-link" disabled>
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This website is licensed under a <a rel="license"
+                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+                Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+            <p>
+              This means you are free to borrow the <a href="https://github.com/icoz69/nerfies.github.io">source
+                code</a> of this website,
+              we just ask that you link back to this page in the footer.
+              Please remember to remove the analytics code included in the header of the website which
+              you do not want on your website.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
